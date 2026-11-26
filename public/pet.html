@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7f2">
+    <title>うちの子 | ペット育成ゲーム</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="pet.css">
+</head>
+<body>
+    <main class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="pet.html" aria-label="うちの子 ホーム">
+                <span class="brand-mark" aria-hidden="true">✿</span>
+                <span>うちの子</span>
+            </a>
+            <div class="topbar-note"><span class="online-dot"></span> ペットとの暮らし</div>
+        </header>
+
+        <section class="screen setup-screen" id="petSetup" aria-labelledby="setupTitle">
+            <div class="setup-copy">
+                <p class="eyebrow">A LITTLE PET, A LOT OF LOVE</p>
+                <h1 id="setupTitle">性格から見つける、<br>きみだけのパートナー。</h1>
+                <p class="setup-intro">まずは自分の性格を選んでみよう。相性ぴったりのペットをおすすめするよ。おむかえしたら、ごはんや遊びを通して一緒に成長しよう。</p>
+                <div class="setup-illustration" aria-hidden="true"><span>☁️</span><span class="setup-big-pet">🐣</span><span>✦</span></div>
+                <div class="setup-promise"><span>🌱</span> お世話で成長し、レベル8になるとお空へ旅立つよ。いつでも「ここでおしまい」にできるよ。</div>
+            </div>
+            <div class="setup-card">
+                <div class="section-heading">
+                    <div><p class="eyebrow">STEP 1 · ABOUT YOU</p><h2>どんなタイプ？</h2></div>
+                    <span class="step-count">性格を選ぶ</span>
+                </div>
+                <div class="personality-grid" id="personalityGrid" role="group" aria-label="自分の性格"></div>
+                <section class="pet-pick-section" id="petPickSection" aria-labelledby="petPickTitle" hidden>
+                    <div class="section-heading pet-step-heading">
+                        <div><p class="eyebrow">STEP 2 · YOUR MATCH</p><h2 id="petPickTitle">相性ぴったりの子</h2></div>
+                        <span class="step-count">6 ひき</span>
+                    </div>
+                    <div class="recommendation-card" aria-live="polite">
+                        <span class="recommendation-emoji" id="recommendedPetEmoji" aria-hidden="true">🐤</span>
+                        <div class="recommendation-copy"><span class="recommendation-label">あなたへのおすすめ</span><strong id="recommendedPetName">ことり</strong><p id="recommendationReason"></p></div>
+                        <span class="recommendation-sparkle" aria-hidden="true">✦</span>
+                    </div>
+                    <p class="choice-hint">おすすめの子が選ばれているよ。ほかの子を選んでも大丈夫。</p>
+                    <div class="animal-grid" id="animalGrid" role="group" aria-label="おむかえするペット"></div>
+                </section>
+                <label class="name-label" for="petNameInput">ペットの名前</label>
+                <div class="name-input-wrap"><span aria-hidden="true">✎</span><input id="petNameInput" type="text" maxlength="12" placeholder="例：もち" autocomplete="off"></div>
+                <p class="form-error" id="setupError" role="alert"></p>
+                <button class="primary-button full-button" id="startGameBtn" type="button">この子をおむかえする <span aria-hidden="true">→</span></button>
+                <p class="privacy-note">育成データはこのブラウザに保存されます</p>
+            </div>
+        </section>
+
+        <section class="screen dashboard-screen" id="petDashboard" hidden>
+            <div class="welcome-row">
+                <div><p class="eyebrow">YOUR COZY LITTLE HOME</p><h1>ただいま！</h1><p class="welcome-subtitle" id="welcomeSubtitle">今日はどんなふうに一緒に過ごそう？</p></div>
+                <button class="text-button change-pet-button" id="changePetBtn" type="button">ペットを変更 <span aria-hidden="true">↗</span></button>
+            </div>
+
+            <div class="dashboard-grid">
+                <section class="pet-card" aria-label="ペットの様子">
+                    <div class="pet-card-top"><span class="level-pill"><span aria-hidden="true">✦</span> LEVEL <b id="petLevel">1</b></span><span class="pet-status"><span class="online-dot"></span><span id="petStatus">元気いっぱい</span></span></div>
+                    <div class="pet-scene">
+                        <span class="scene-sun" aria-hidden="true">☀</span><span class="scene-cloud cloud-one" aria-hidden="true">☁</span><span class="scene-cloud cloud-two" aria-hidden="true">☁</span>
+                        <span class="scene-sparkle sparkle-one" aria-hidden="true">✦</span><span class="scene-sparkle sparkle-two" aria-hidden="true">✧</span>
+                        <div class="pet-shadow"></div><div class="pet-emoji" id="petEmoji" aria-label="ペット">🐣</div>
+                        <div class="pet-speech" id="petMessage">一緒に遊ぼう！</div>
+                    </div>
+                    <div class="pet-identity"><div><h2 id="petDisplayName">もち</h2><p id="petSpeciesLabel">ことり · すくすく成長中</p></div><span class="heart-badge" aria-hidden="true">♡</span></div>
+                    <div class="exp-row"><span>つぎの成長まで</span><span id="expText">0 / 16 EXP</span></div>
+                    <div class="progress-track exp-track"><div class="progress-fill exp-fill" id="expBar"></div></div>
+                    <div class="pet-actions">
+                        <button class="action-button feed-button" id="feedBtn" type="button"><span class="action-icon">🍓</span><span>ごはん</span><b id="foodCount">3</b></button>
+                        <button class="action-button play-button" id="playBtn" type="button"><span class="action-icon">🪀</span><span>一緒に遊ぶ</span></button>
+                        <button class="action-button rest-button" id="restBtn" type="button"><span class="action-icon">🛏️</span><span>お昼寝</span></button>
+                    </div>
+                    <div class="pet-meters">
+                        <div class="meter-row"><span>おなか</span><div class="progress-track"><div class="progress-fill hunger-fill" id="hungerBar"></div></div><b id="hungerText">65%</b></div>
+                        <div class="meter-row"><span>なかよし</span><div class="progress-track"><div class="progress-fill bond-fill" id="bondBar"></div></div><b id="bondText">35%</b></div>
+                        <div class="meter-row"><span>げんき</span><div class="progress-track"><div class="progress-fill energy-fill" id="energyBar"></div></div><b id="energyText">75%</b></div>
+                    </div>
+                </section>
+
+                <div class="side-column">
+                    <section class="progress-card">
+                        <div class="progress-card-heading"><div><p class="eyebrow">LITTLE BY LITTLE</p><h2>一緒に過ごした記録</h2></div><span class="record-icon" aria-hidden="true">✧</span></div>
+                        <div class="record-stats"><div><span class="record-number" id="careCount">0</span><span class="record-label">お世話した回数</span></div><div><span class="record-number" id="playCount">0</span><span class="record-label">遊んだ回数</span></div></div>
+                        <div class="record-footnote"><span aria-hidden="true">💚</span> お世話をすると経験値がたまるよ。</div>
+                        <button class="text-button graduation-link" id="finishGameBtn" type="button">ここでおしまいにする <span aria-hidden="true">→</span></button>
+                        <button class="text-button graduation-link" id="showEndingBtn" type="button" hidden>思い出カードを見る <span aria-hidden="true">→</span></button>
+                    </section>
+                    <p class="dashboard-footnote"><span aria-hidden="true">💾</span> ペットの成長はこの端末に保存されます</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="screen ending-screen" id="petEnding" aria-labelledby="endingTitle" hidden>
+            <div class="ending-card">
+                <p class="eyebrow ending-eyebrow">A LITTLE LIFE, FULL OF LOVE</p>
+                <div class="ending-scene" aria-hidden="true">
+                    <span class="ending-sparkle ending-sparkle-one">✦</span>
+                    <span class="ending-sparkle ending-sparkle-two">✧</span>
+                    <span class="ending-pet" id="endingEmoji">🦜</span>
+                    <span class="ending-name" id="endingPetName">もち</span>
+                </div>
+                <p class="ending-caption">いっしょに過ごした時間</p>
+                <h1 id="endingTitle">遊びが大好きな元気っ子</h1>
+                <p class="ending-description" id="endingDescription"></p>
+                <div class="ending-record" aria-label="一緒に過ごした記録">
+                    <div><span class="ending-record-number" id="endingCareCount">0</span><span class="ending-record-label">お世話</span></div>
+                    <div><span class="ending-record-number" id="endingPlayCount">0</span><span class="ending-record-label">いっしょに遊んだ</span></div>
+                    <div><span class="ending-record-number" id="endingFeedCount">0</span><span class="ending-record-label">ごはん</span></div>
+                    <div><span class="ending-record-number" id="endingRestCount">0</span><span class="ending-record-label">お昼寝</span></div>
+                </div>
+                <div class="ending-actions">
+                    <button class="primary-button full-button" id="returnToDiaryBtn" type="button">一緒に暮らした記録を見る <span aria-hidden="true">→</span></button>
+                    <button class="text-button" id="newPetBtn" type="button">新しい子をおむかえする</button>
+                </div>
+            </div>
+        </section>
+
+        <footer class="app-footer"><span>うちの子</span><span>一緒に過ごす、やさしい毎日。</span></footer>
+    </main>
+
+    <script>
+        const PETS = [
+            { id: 'cat', name: 'ねこ', emoji: ['🐱', '🐈', '😺'] },
+            { id: 'dog', name: 'いぬ', emoji: ['🐶', '🐕', '🦮'] },
+            { id: 'rabbit', name: 'うさぎ', emoji: ['🐰', '🐇', '🐇'] },
+            { id: 'hamster', name: 'ハムスター', emoji: ['🐹', '🐹', '🐹'] },
+            { id: 'bird', name: 'ことり', emoji: ['🐤', '🐦', '🦜'] },
+            { id: 'turtle', name: 'かめ', emoji: ['🐢', '🐢', '🐢'] }
+        ];
+        const PERSONALITIES = [
+            { id: 'curious', title: '好奇心いっぱい', description: '新しい発見が好き', emoji: '✨', petId: 'bird', reason: '小さな発見を一緒に楽しめる、ことりがおすすめ。' },
+            { id: 'sociable', title: '人と過ごすのが好き', description: '誰かと一緒だと元気', emoji: '☀️', petId: 'dog', reason: 'たくさん一緒に遊んで仲良くなれる、いぬがおすすめ。' },
+            { id: 'gentle', title: 'やさしく気配り', description: '相手の気持ちを大切に', emoji: '🌷', petId: 'rabbit', reason: 'やさしい気持ちで寄りそえる、うさぎがおすすめ。' },
+            { id: 'active', title: '元気にチャレンジ', description: '体を動かすのが好き', emoji: '🏃', petId: 'hamster', reason: '元気いっぱいに一緒の時間を楽しめる、ハムスターがおすすめ。' },
+            { id: 'mypace', title: 'のんびりマイペース', description: '自分の時間も大切', emoji: '☁️', petId: 'cat', reason: 'おたがいのペースを大切にできる、ねこがおすすめ。' },
+            { id: 'thoughtful', title: 'コツコツ丁寧', description: '小さな変化に気づく', emoji: '🌱', petId: 'turtle', reason: '毎日の変化をゆっくり見守れる、かめがおすすめ。' }
+        ];
+        const STORAGE_KEY = 'manabi-pet-save-v2';
+        const LEGACY_STORAGE_KEY = 'manabi-pet-save-v1';
+        const EXP_PER_LEVEL = 16;
+        const MAX_LEVEL = 8;
+        const DEATH_EXP = (MAX_LEVEL - 1) * EXP_PER_LEVEL;
+        const LEGACY_MAX_EXP = 48;
+        const DEFAULT_SAVE = { petId: 'bird', personalityId: '', name: '', totalExp: 0, food: 3, hunger: 65, bond: 35, energy: 75, careCount: 0, playCount: 0, feedCount: 0, restCount: 0, finished: false };
+        let game = loadGame();
+        let chosenPet = game.petId;
+        let chosenPersonality = PERSONALITIES.some(personality => personality.id === game.personalityId) ? game.personalityId : '';
+
+        function loadGame() {
+            try {
+                const currentSave = localStorage.getItem(STORAGE_KEY);
+                const isLegacySave = currentSave === null;
+                const saved = JSON.parse(currentSave || localStorage.getItem(LEGACY_STORAGE_KEY));
+                if (!saved || typeof saved !== 'object') return { ...DEFAULT_SAVE };
+                const loaded = { ...DEFAULT_SAVE, ...saved };
+                if (isLegacySave) {
+                    loaded.totalExp = Math.min(LEGACY_MAX_EXP, Math.round((Number(saved.totalExp) || 0) * LEGACY_MAX_EXP / 500));
+                } else {
+                    loaded.totalExp = Math.min(DEATH_EXP, Number(saved.totalExp) || 0);
+                }
+                return loaded;
+            } catch { return { ...DEFAULT_SAVE }; }
+        }
+
+        function saveGame() {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(game)); } catch { /* Local storage can be unavailable in private browsing. */ }
+        }
+
+        function getPet() { return PETS.find(pet => pet.id === game.petId) || PETS[0]; }
+        function getPersonality() { return PERSONALITIES.find(personality => personality.id === game.personalityId); }
+        function getRecommendation() { return PERSONALITIES.find(personality => personality.id === chosenPersonality); }
+        function getLevel() { return Math.min(MAX_LEVEL, Math.floor(game.totalExp / EXP_PER_LEVEL) + 1); }
+        function getStageIndex() { return Math.min(2, Math.floor((getLevel() - 1) / 3)); }
+        function getCurrentEmoji() { return getPet().emoji[getStageIndex()]; }
+        function isDead() { return game.totalExp >= DEATH_EXP; }
+        function isFinished() { return isDead() || game.finished === true; }
+        function renderPersonalityChoices() {
+            const grid = document.getElementById('personalityGrid');
+            grid.innerHTML = '';
+            PERSONALITIES.forEach(personality => {
+                const button = document.createElement('button');
+                const selected = personality.id === chosenPersonality;
+                button.type = 'button';
+                button.className = `personality-choice${selected ? ' selected' : ''}`;
+                button.setAttribute('aria-pressed', String(selected));
+                button.innerHTML = `<span class="personality-emoji" aria-hidden="true">${personality.emoji}</span><span class="personality-text"><strong>${personality.title}</strong><small>${personality.description}</small></span><span class="personality-check" aria-hidden="true">✓</span>`;
+                button.addEventListener('click', () => {
+                    chosenPersonality = personality.id;
+                    chosenPet = personality.petId;
+                    document.getElementById('setupError').textContent = '';
+                    renderSetupChoices();
+                });
+                grid.appendChild(button);
+            });
+        }
+
+        function renderAnimalChoices() {
+            const grid = document.getElementById('animalGrid');
+            grid.innerHTML = '';
+            const recommendation = getRecommendation();
+            PETS.forEach(pet => {
+                const button = document.createElement('button');
+                const selected = pet.id === chosenPet;
+                const recommended = recommendation && pet.id === recommendation.petId;
+                button.type = 'button';
+                button.className = `animal-choice${selected ? ' selected' : ''}${recommended ? ' recommended' : ''}`;
+                button.setAttribute('aria-pressed', String(selected));
+                button.innerHTML = `${recommended ? '<span class="animal-recommend-tag">おすすめ</span>' : ''}<span class="animal-emoji">${pet.emoji[0]}</span><span class="animal-name">${pet.name}</span><span class="animal-check" aria-hidden="true">✓</span>`;
+                button.addEventListener('click', () => {
+                    chosenPet = pet.id;
+                    document.getElementById('setupError').textContent = '';
+                    renderAnimalChoices();
+                });
+                grid.appendChild(button);
+            });
+        }
+
+        function renderSetupChoices() {
+            const recommendation = getRecommendation();
+            const petPickSection = document.getElementById('petPickSection');
+            petPickSection.hidden = !recommendation;
+            document.getElementById('startGameBtn').disabled = !recommendation;
+            renderPersonalityChoices();
+            if (!recommendation) return;
+            const pet = PETS.find(item => item.id === recommendation.petId);
+            document.getElementById('recommendedPetEmoji').textContent = pet.emoji[0];
+            document.getElementById('recommendedPetName').textContent = pet.name;
+            document.getElementById('recommendationReason').textContent = recommendation.reason;
+            renderAnimalChoices();
+        }
+
+        function showScreen(screenId) {
+            ['petSetup', 'petDashboard', 'petEnding'].forEach(id => {
+                document.getElementById(id).hidden = id !== screenId;
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderDashboard() {
+            const pet = getPet();
+            const level = getLevel();
+            const levelStart = (level - 1) * EXP_PER_LEVEL;
+            const levelSize = EXP_PER_LEVEL;
+            const expInLevel = isDead() ? levelSize : game.totalExp - levelStart;
+            const stage = getStageIndex();
+            document.getElementById('petEmoji').textContent = getCurrentEmoji();
+            document.getElementById('petLevel').textContent = level;
+            document.getElementById('petDisplayName').textContent = game.name || pet.name;
+            const personality = getPersonality();
+            document.getElementById('welcomeSubtitle').textContent = personality
+                ? `${personality.title}タイプのあなたと${game.name || pet.name}。今日はどんなふうに過ごそう？`
+                : '今日はどんなふうに一緒に過ごそう？';
+            document.getElementById('petSpeciesLabel').textContent = `${pet.name} · ${isDead() ? 'いっしょに過ごした思い出' : stage === 0 ? 'すくすく成長中' : stage === 1 ? '大きくなってきたよ' : '立派に成長したよ'}`;
+            document.getElementById('petStatus').textContent = isDead() ? 'お空へ旅立ちました' : game.energy < 25 ? 'ちょっとおねむ' : game.hunger < 25 ? 'おなかぺこぺこ' : '元気いっぱい';
+            document.getElementById('petMessage').textContent = isDead() ? '一緒に過ごした思い出を大切にしているよ。' : game.energy < 25 ? 'ちょっと休憩したいな…' : game.hunger < 25 ? 'おなかすいたな…' : game.bond < 45 ? '一緒に遊ぼう！' : '一緒だと楽しいね！';
+            document.getElementById('expText').textContent = isDead() ? 'レベル8' : `${expInLevel} / ${levelSize} EXP`;
+            document.getElementById('expBar').style.width = `${expInLevel / levelSize * 100}%`;
+            document.getElementById('foodCount').textContent = '∞';
+            document.getElementById('hungerBar').style.width = `${game.hunger}%`;
+            document.getElementById('hungerText').textContent = `${game.hunger}%`;
+            document.getElementById('bondBar').style.width = `${Math.min(100, game.bond)}%`;
+            document.getElementById('bondText').textContent = `${game.bond}%`;
+            document.getElementById('energyBar').style.width = `${game.energy}%`;
+            document.getElementById('energyText').textContent = `${game.energy}%`;
+            document.getElementById('careCount').textContent = game.careCount;
+            document.getElementById('playCount').textContent = game.playCount;
+            document.getElementById('feedBtn').disabled = isFinished() || game.hunger >= 100;
+            document.getElementById('playBtn').disabled = isFinished() || game.energy < 18;
+            document.getElementById('restBtn').disabled = isFinished() || game.energy >= 100;
+            document.getElementById('changePetBtn').textContent = isFinished() ? '新しい子をおむかえする ↗' : 'ペットを変更 ↗';
+            document.getElementById('finishGameBtn').hidden = isFinished();
+            document.getElementById('showEndingBtn').hidden = !isFinished();
+            document.getElementById('showEndingBtn').textContent = isDead() ? '思い出カードを見る →' : '一緒の記録を見る →';
+        }
+
+        function getEndingProfile() {
+            const routines = [
+                { count: game.playCount, title: '遊びが大好きな元気っ子', description: `${game.name}は、いっしょに遊ぶ時間が大好き。たくさん笑って、好奇心いっぱいの毎日を過ごしたよ。` },
+                { count: game.feedCount, title: 'ごはんが大好きな食いしんぼ', description: `${game.name}は、おいしいごはんとあなたのやさしさが大好き。食べることを楽しみながら、一緒の時間を過ごしたよ。` },
+                { count: game.restCount, title: 'のんびりマイペースな子', description: `${game.name}は、ゆっくり休む時間も大切にして、穏やかな毎日を過ごしたよ。` }
+            ];
+            if (game.restCount > 0 && game.restCount >= Math.ceil(game.playCount * 0.75) && game.restCount >= game.feedCount) {
+                return routines[2];
+            }
+            const topRoutine = routines.reduce((top, routine) => routine.count > top.count ? routine : top, { count: 0 });
+            if (!topRoutine.count || routines.filter(routine => routine.count === topRoutine.count).length > 1) {
+                return {
+                    title: '人なつっこいバランス名人',
+                    description: `${game.name}は、ごはんも遊びもお昼寝も楽しんで、あなたと楽しい時間を過ごしたよ。`
+                };
+            }
+            return topRoutine;
+        }
+
+        function renderEnding() {
+            const profile = getEndingProfile();
+            document.getElementById('endingEmoji').textContent = getCurrentEmoji();
+            document.getElementById('endingPetName').textContent = game.name || getPet().name;
+            document.getElementById('endingTitle').textContent = isDead() ? '大切な思い出をありがとう' : profile.title;
+            document.getElementById('endingDescription').textContent = isDead()
+                ? `${game.name || getPet().name}はレベル8まで成長して、お空へ旅立ちました。いっしょに過ごした日々は、ずっと大切な思い出だよ。`
+                : profile.description;
+            document.getElementById('endingCareCount').textContent = game.careCount;
+            document.getElementById('endingPlayCount').textContent = game.playCount;
+            document.getElementById('endingFeedCount').textContent = game.feedCount;
+            document.getElementById('endingRestCount').textContent = game.restCount;
+        }
+
+        function finishGame() {
+            if (isFinished()) return;
+            game.finished = true;
+            saveGame();
+            renderDashboard();
+            renderEnding();
+            showScreen('petEnding');
+        }
+
+        function finishCareAction(message, leveledUp) {
+            saveGame();
+            renderDashboard();
+            if (isDead()) {
+                renderEnding();
+                showScreen('petEnding');
+                return;
+            }
+            showPetMessage(leveledUp ? `レベルアップ！${game.name}が成長したよ ✨` : message);
+        }
+
+        function beginWithPet() {
+            if (!chosenPersonality) {
+                document.getElementById('setupError').textContent = 'まずは自分の性格を選んでね。';
+                document.querySelector('.personality-choice')?.focus();
+                return;
+            }
+            const name = document.getElementById('petNameInput').value.trim();
+            if (!name) {
+                document.getElementById('setupError').textContent = 'ペットの名前を入力してね。';
+                document.getElementById('petNameInput').focus();
+                return;
+            }
+            game.petId = chosenPet;
+            game.personalityId = chosenPersonality;
+            game.name = name;
+            saveGame();
+            renderDashboard();
+            if (isFinished()) {
+                renderEnding();
+                showScreen('petEnding');
+            } else {
+                showScreen('petDashboard');
+            }
+        }
+
+        function changePet() {
+            if (isFinished()) {
+                startNewJourney();
+                return;
+            }
+            chosenPet = game.petId;
+            chosenPersonality = PERSONALITIES.some(personality => personality.id === game.personalityId) ? game.personalityId : '';
+            document.getElementById('petNameInput').value = game.name || '';
+            document.getElementById('setupError').textContent = '';
+            renderSetupChoices();
+            document.getElementById('startGameBtn').innerHTML = 'この子に決める <span aria-hidden="true">→</span>';
+            showScreen('petSetup');
+        }
+
+        function startNewJourney() {
+            game = { ...DEFAULT_SAVE };
+            chosenPet = game.petId;
+            chosenPersonality = '';
+            saveGame();
+            document.getElementById('petNameInput').value = '';
+            document.getElementById('setupError').textContent = '';
+            document.getElementById('startGameBtn').innerHTML = 'この子をおむかえする <span aria-hidden="true">→</span>';
+            renderSetupChoices();
+            showScreen('petSetup');
+        }
+
+        function showPetMessage(message) {
+            document.getElementById('petMessage').textContent = message;
+        }
+
+        function addExperience(amount) {
+            const oldLevel = getLevel();
+            game.totalExp = Math.min(DEATH_EXP, game.totalExp + amount);
+            return getLevel() > oldLevel;
+        }
+
+        function feedPet() {
+            if (isFinished() || game.hunger >= 100) return;
+            game.hunger = Math.min(100, game.hunger + 25);
+            game.bond += 4;
+            const leveledUp = addExperience(10);
+            game.careCount++;
+            game.feedCount++;
+            finishCareAction('ごはんありがとう！おいしい！', leveledUp);
+        }
+
+        function playWithPet() {
+            if (isFinished() || game.energy < 18) return;
+            game.energy = Math.max(0, game.energy - 18);
+            game.hunger = Math.max(0, game.hunger - 8);
+            game.bond += 12;
+            const leveledUp = addExperience(12);
+            game.careCount++;
+            game.playCount++;
+            finishCareAction('わーい！遊ぶのだいすき！', leveledUp);
+        }
+
+        function restPet() {
+            if (isFinished() || game.energy >= 100) return;
+            game.energy = Math.min(100, game.energy + 35);
+            const leveledUp = addExperience(10);
+            game.careCount++;
+            game.restCount++;
+            finishCareAction('すっきりした！また遊ぼうね。', leveledUp);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSetupChoices();
+            if (game.name) {
+                renderDashboard();
+                if (isFinished()) {
+                    renderEnding();
+                    showScreen('petEnding');
+                } else {
+                    showScreen('petDashboard');
+                }
+                document.getElementById('startGameBtn').innerHTML = 'この子に決める <span aria-hidden="true">→</span>';
+            } else {
+                showScreen('petSetup');
+            }
+            document.getElementById('startGameBtn').addEventListener('click', beginWithPet);
+            document.getElementById('petNameInput').addEventListener('input', () => { document.getElementById('setupError').textContent = ''; });
+            document.getElementById('changePetBtn').addEventListener('click', changePet);
+            document.getElementById('finishGameBtn').addEventListener('click', finishGame);
+            document.getElementById('showEndingBtn').addEventListener('click', () => {
+                renderEnding();
+                showScreen('petEnding');
+            });
+            document.getElementById('returnToDiaryBtn').addEventListener('click', () => showScreen('petDashboard'));
+            document.getElementById('newPetBtn').addEventListener('click', startNewJourney);
+            document.getElementById('feedBtn').addEventListener('click', feedPet);
+            document.getElementById('playBtn').addEventListener('click', playWithPet);
+            document.getElementById('restBtn').addEventListener('click', restPet);
+        });
+    </script>
+</body>
+</html>
