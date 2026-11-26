@@ -61,14 +61,16 @@ npm start
 
 Visit `http://localhost:8080`
 
+The pet-raising game at `/pet.html` works without an LLM API key. API key setup is only needed when using the generic `/api/` endpoint.
+
 ## How It Works
 
 ### Architecture
 
 ```
-Client (quiz.html) → POST /api/ → server.js → LLM → Response
-                                     ↓
-                              prompt.md (template)
+Custom client → POST /api/ → server.js → LLM → Response
+                                  ↓
+                           prompt.md (template)
 ```
 
 ### Variable Substitution
@@ -114,13 +116,13 @@ Format: JSON array
 
 ## Example Applications
 
-### 1. IT Certification Quiz (Included)
+### 1. Pet Raising Game (Included)
 
 **Files:**
-- `prompt.md` - Defines IT quiz generation logic
-- `public/quiz.html` - Quiz interface
+- `public/pet.html` - Choose and raise a pet
+- `public/pet.css` - Game styles
 
-**Usage:** Generate IT certification practice questions
+**Usage:** Feed, play with, and raise a pet. Progress is saved in the browser.
 
 ### 2. Translation App (Example)
 
@@ -178,9 +180,9 @@ generic-webapi/
 ├── package.json       # Dependencies
 ├── .env.example       # Environment variables template
 ├── public/            # Static files
-│   ├── quiz.html     # IT quiz application
+│   ├── pet.html      # Pet raising game
+│   ├── pet.css       # Pet game styles
 │   ├── style.css     # Styles
-│   └── quiz.css      # Quiz-specific styles
 └── README.md         # This file
 ```
 
